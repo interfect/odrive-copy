@@ -14,7 +14,7 @@ This script was written after Multcloud failed repeatedly to copy a few hundred 
 
 ## Usage Instructions (for Migrading from Amazon Cloud Drive)
 
-In light of the recent banning of the open-source Amazon Drive clients by Amazon, the usage of `odcopy.sh` will be explained in the context of migrating from Amazon Cloud Drive to Google Drive.
+In light of the recent banning of the open-source Amazon Drive clients by Amazon, the usage of `odcopy.sh` will be explained in the context of migrating from Amazon Cloud Drive to Google Drive. These instructions assume a Unix system, and have been developed on Ubuntu.
 
 0. [Grab the `odcopy.sh` script](https://raw.githubusercontent.com/interfect/odrive-copy/master/odcopy.sh) from this repository.
 
@@ -27,7 +27,7 @@ chmod +x odcopy.sh
 
 2. Connect your cloud accounts: Amazon Cloud Drive and Google Drive. The names ytou assign to the accounts will be their paths in the folder used by odrive later.
 
-3. [Download and start the odrive agent](https://docs.odrive.com/docs/odrive-sync-agent#section--download-sync-agent-), which is the proprietary odrive uploader/downloader process. It stays running as a server process.
+3. [Download and start the odrive agent](https://docs.odrive.com/docs/odrive-sync-agent#section--download-sync-agent-), which is the proprietary binary odrive uploader/downloader process. It stays running as a server process.
 
 4. [Download and install on your PATH the odrive.py CLI tool](https://docs.odrive.com/docs/odrive-cli#section--download-cli-), which is used to control the server.
 
@@ -45,7 +45,7 @@ odrive.py authenticate YOUR-AUTH-CODE
 mkdir /tmp/odrive
 ```
 
-8. "Mount" your odrive. This isn't a real FUSE mount; it just tells odrive to synchronize stuff using this as a root.
+8. "Mount" your odrive. This isn't a real FUSE mount; it just tells odrive to synchronize stuff using this as a root. The odrive server will create placeholder `.cloudf` file for the root directory of each cloud you have added on odrive. You can "sync" inividual folders to pull down their contents as placeholder `.cloud` files (for files) and `.cloudf` files (for subfolders). You can "sync" the `.cloud` files to pull down file contents, and you can "unsync" files and foilders to turn them back into the placeholders.
 
 ```
 odrive.py mount /tmp/odrive /
@@ -65,6 +65,13 @@ odrive.py sync /tmp/odrive/Google\ Drive.cloudf
 ```
 
 The script will recurse through folders and subfolders, downloading each file from the source ansd uploading it to the destination. When it finishes, all the files should be copied across.
+
+11. When you're done, unmount the directory and clear out all the leftover placeholder files.
+
+```
+odrive.py unmount /tmp/odrive
+rm -Rf /tmp/odrive
+```
 
 ## Troubleshooting
 
