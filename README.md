@@ -1,6 +1,17 @@
 # odrive-copy
 Recursive copy script for odrive to copy files from could to cloud.
 
+This script is intended to allow batch copy operations between [clouds accessible to odrive](https://www.odrive.com/links?catid=all), including:
+
+* Amazon Cloud Drive
+* Google Drive
+* OneDrive
+* S3
+* B2
+* Not-actually-cloud things like FTP, SFTP, and WebDAV
+
+This script was written after Multcloud failed repeatedly to copy a few hundred gigabytes of data from Amazon Cloud Drive to Google Drive, and competing cloud migration serrvices offered to do it for preposterously high prices. It does need to download and upload each file, so if you want faster transfers or are worried about transfer quotas you may want to run it on a VPS.
+
 ## Usage Instructions (for Migrading from Amazon Cloud Drive)
 
 In light of the recent banning of the open-source Amazon Drive clients by Amazon, the usage of `odcopy.sh` will be explained in the context of migrating from Amazon Cloud Drive to Google Drive.
@@ -52,6 +63,8 @@ odrive.py sync /tmp/odrive/Google\ Drive.cloudf
 ```
 ./odcopy.sh /tmp/odrive/Amazon\ Drive/data.cloudf /tmp/odrive/Google\ Drive/data.cloudf
 ```
+
+The script will recurse through folders and subfolders, downloading each file from the source ansd uploading it to the destination. When it finishes, all the files should be copied across.
 
 ## Troubleshooting
 
