@@ -29,7 +29,7 @@
 
 set -e
 
-if [ "${#}" -ne 2 ]; then
+if [[ "${#}" -ne 2 ]]; then
     echo "Usage: ${0} SOURCE.cloudf DEST.cloudf"
     exit 1
 fi
