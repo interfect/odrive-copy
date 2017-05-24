@@ -76,12 +76,14 @@ function synchronize_file() {
     
     while [ "$(odrive.py syncstate "${TO_CLOUD%.cloud}" | head -n1)" != 'Synced' ]; do
         echo "Waiting for ${TO_CLOUD%.cloud} to sync"
-        sleep 5
+        sleep 1
     done
     
-    until odrive.py unsync "${TO_CLOUD%.cloud}"; do
+    odrive.py unsync "${TO_CLOUD%.cloud}" # Succeeds even if unsync didn't
+    until [[ -f "${TO_CLOUD}" ]]; do
         echo "Waiting for ${TO_CLOUD%.cloud} to unsync"
-        sleep 5
+        sleep 1
+        odrive.py unsync "${TO_CLOUD%.cloud}"
     done
     
     echo "File ${TO_CLOUD} complete"
@@ -124,7 +126,7 @@ function synchronize_directory() {
         while [ "$(odrive.py syncstate "${TO_CLOUDF%.cloudf}" | head -n1)" != 'Synced' ]; do
             echo "Waiting for ${TO_CLOUDF%.cloudf} to sync"
             odrive.py refresh "${TO_PARENT}"
-            sleep 5
+            sleep 1
         done
     else
         # Download the directory
@@ -172,19 +174,19 @@ function synchronize_directory() {
     
     # Delete file lists
     echo "Drop file lists..."
-    odrive.py unsync "${FROM_CLOUDF%.cloudf}"
+    odrive.py unsync "${FROM_CLOUDF%.cloudf}" # Succeeds even if unsync didn't
+    until [[ -f "${FROM_CLOUDF}" ]]; do
+        echo "Waiting for ${FROM_CLOUDF%.cloudf} to unsync"
+        sleep 1
+        odrive.py unsync "${FROM_CLOUDF%.cloudf}"
+    done
     
-    if [[ ! -f "${FROM_CLOUDF}" ]]; then
-        echo "Could not unsync ${FROM_CLOUDF}"
-        exit 1
-    fi
-    
-    odrive.py unsync "${TO_CLOUDF%.cloudf}"
-    
-    if [[ ! -f "${TO_CLOUDF}" ]]; then
-        echo "Could not unsync ${TO_CLOUDF}"
-        exit 1
-    fi
+    odrive.py unsync "${TO_CLOUDF%.cloudf}" # Succeeds even if unsync didn't
+    until [[ -f "${TO_CLOUDF}" ]]; do
+        echo "Waiting for ${TO_CLOUDF%.cloudf} to unsync"
+        sleep 1
+        odrive.py unsync "${TO_CLOUDF%.cloudf}"
+    done
 }
 
 synchronize_directory "${SOURCE_CLOUDF}" "${DEST_CLOUDF}"
