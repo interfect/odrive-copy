@@ -25,7 +25,7 @@ chmod +x odcopy.sh
 
 1. [Open an odrive account](https://www.odrive.com/login/start?redirectUrl=/login/websuccess) for free. **Turns out that "unsync" is a premium feature, so if you don't have a free trial you will have to somehow make that work.**
 
-2. Connect your cloud accounts: Amazon Cloud Drive and Google Drive. The names ytou assign to the accounts will be their paths in the folder used by odrive later.
+2. Connect your cloud accounts: Amazon Cloud Drive and Google Drive. The names you assign to the accounts will be their paths in the folder used by odrive later.
 
 3. [Download and start the odrive agent](https://docs.odrive.com/docs/odrive-sync-agent#section--download-sync-agent-), which is the proprietary binary odrive uploader/downloader process. It stays running as a server process.
 
